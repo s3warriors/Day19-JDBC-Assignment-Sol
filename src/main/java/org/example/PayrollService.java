@@ -20,6 +20,17 @@ public class PayrollService {
             System.out.println("\nUC 2: Retrieve Employee Payroll Data");
             payrollService.retrieveEmployeePayrollData();
 
+            System.out.println("\nUC 3: Update Salary for Employee Terisa");
+            payrollService.updateSalary("Terisa", 3000000.00);
+
+//            System.out.println("\nUC 4: Update Salary with PreparedStatement");
+//            payrollService.updateSalaryWithPreparedStatement("Terisa", 3000000.00);
+//
+//            System.out.println("\nUC 5: Retrieve Employees by Date Range");
+//            payrollService.retrieveEmployeesByDateRange("2023-01-01", "2023-12-31");
+//
+//            System.out.println("\nUC 6: Aggregate Analysis by Gender");
+//            payrollService.aggregateAnalysisByGender();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,5 +63,15 @@ public class PayrollService {
             }
         }
         employeePayrollList.forEach(System.out::println);
+    }
+    // UC 3: Update Salary for Employee Terisa
+    public void updateSalary(String name, double salary) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement()) {
+
+            String updateQuery = "UPDATE employee_payroll SET salary = " + salary + " WHERE name = '" + name + "'";
+            int rowsAffected = statement.executeUpdate(updateQuery);
+            System.out.println("Rows Updated: " + rowsAffected);
+        }
     }
 }
