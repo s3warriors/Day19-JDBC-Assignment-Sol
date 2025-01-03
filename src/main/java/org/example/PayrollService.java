@@ -28,9 +28,10 @@ public class PayrollService {
 
             System.out.println("\nUC 5: Retrieve Employees by Date Range");
             payrollService.retrieveEmployeesByDateRange("2023-01-01", "2023-12-31");
-//
-//            System.out.println("\nUC 6: Aggregate Analysis by Gender");
-//            payrollService.aggregateAnalysisByGender();
+
+            System.out.println("\nUC 6: Aggregate Analysis by Gender");
+            payrollService.aggregateAnalysisByGender();
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,6 +105,34 @@ public class PayrollService {
                             resultSet.getDouble("salary"),
                             resultSet.getDate("start_date")));
                 }
+            }
+        }
+    }
+
+
+    // UC 6: Aggregate Analysis by Gender
+    public void aggregateAnalysisByGender() throws SQLException {
+        String query = "SELECT gender, SUM(salary) as TotalSalary, AVG(salary) as AvgSalary, " +
+                "MIN(salary) as MinSalary, MAX(salary) as MaxSalary, COUNT(*) as Count " +
+                "FROM employee_payroll GROUP BY gender";
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                String gender = resultSet.getString("gender");
+                double totalSalary = resultSet.getDouble("TotalSalary");
+                double avgSalary = resultSet.getDouble("AvgSalary");
+                double minSalary = resultSet.getDouble("MinSalary");
+                double maxSalary = resultSet.getDouble("MaxSalary");
+                int count = resultSet.getInt("Count");
+
+                System.out.println("Gender: " + gender +
+                        ", Total Salary: " + totalSalary +
+                        ", Avg Salary: " + avgSalary +
+                        ", Min Salary: " + minSalary +
+                        ", Max Salary: " + maxSalary +
+                        ", Count: " + count);
             }
         }
     }
