@@ -23,11 +23,11 @@ public class PayrollService {
             System.out.println("\nUC 3: Update Salary for Employee Terisa");
             payrollService.updateSalary("Terisa", 3000000.00);
 
-//            System.out.println("\nUC 4: Update Salary with PreparedStatement");
-//            payrollService.updateSalaryWithPreparedStatement("Terisa", 3000000.00);
-//
-//            System.out.println("\nUC 5: Retrieve Employees by Date Range");
-//            payrollService.retrieveEmployeesByDateRange("2023-01-01", "2023-12-31");
+            System.out.println("\nUC 4: Update Salary with PreparedStatement");
+            payrollService.updateSalaryWithPreparedStatement("Terisa", 3000000.00);
+
+            System.out.println("\nUC 5: Retrieve Employees by Date Range");
+            payrollService.retrieveEmployeesByDateRange("2023-01-01", "2023-12-31");
 //
 //            System.out.println("\nUC 6: Aggregate Analysis by Gender");
 //            payrollService.aggregateAnalysisByGender();
@@ -85,6 +85,26 @@ public class PayrollService {
             preparedStatement.setString(2, name);
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println("Rows Updated: " + rowsAffected);
+        }
+    }
+
+    // UC 5: Retrieve Employees by Date Range
+    public void retrieveEmployeesByDateRange(String startDate, String endDate) throws SQLException {
+        String query = "SELECT * FROM employee_payroll WHERE start_date BETWEEN ? AND ?";
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setDate(1, Date.valueOf(startDate));
+            preparedStatement.setDate(2, Date.valueOf(endDate));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    System.out.println(new EmployeePayroll(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name"),
+                            resultSet.getDouble("salary"),
+                            resultSet.getDate("start_date")));
+                }
+            }
         }
     }
 
