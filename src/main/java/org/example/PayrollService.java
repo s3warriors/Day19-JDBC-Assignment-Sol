@@ -74,4 +74,18 @@ public class PayrollService {
             System.out.println("Rows Updated: " + rowsAffected);
         }
     }
+
+    // UC 4: Update Salary with PreparedStatement
+    public void updateSalaryWithPreparedStatement(String name, double salary) throws SQLException {
+        String updateQuery = "UPDATE employee_payroll SET salary = ? WHERE name = ?";
+        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+
+            preparedStatement.setDouble(1, salary);
+            preparedStatement.setString(2, name);
+            int rowsAffected = preparedStatement.executeUpdate();
+            System.out.println("Rows Updated: " + rowsAffected);
+        }
+    }
+
 }
